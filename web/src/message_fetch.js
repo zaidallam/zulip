@@ -311,7 +311,7 @@ export function get_backfill_anchor(msg_list) {
 
     // msg_list is empty, which is an impossible
     // case, raise a fatal error.
-    throw new Error("There are no message available to backfill.");
+    // throw new Error("There are no message available to backfill.");
 }
 
 export function get_frontfill_anchor(msg_list) {

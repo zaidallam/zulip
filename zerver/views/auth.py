@@ -8,7 +8,7 @@ from urllib.parse import urlencode
 import jwt
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 from django.conf import settings
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.views import LoginView as DjangoLoginView
 from django.contrib.auth.views import PasswordResetView as DjangoPasswordResetView
 from django.contrib.auth.views import logout_then_login as django_logout_then_login
@@ -56,13 +56,14 @@ from zerver.lib.exceptions import (
     RateLimitedError,
     RealmDeactivatedError,
     UserDeactivatedError,
+    AccessDeniedError
 )
 from zerver.lib.mobile_auth_otp import otp_encrypt_api_key
 from zerver.lib.push_notifications import push_notifications_enabled
 from zerver.lib.pysa import mark_sanitized
 from zerver.lib.realm_icon import realm_icon_url
 from zerver.lib.request import REQ, RequestNotes, has_request_variables
-from zerver.lib.response import json_success
+from zerver.lib.response import json_success, json_response_from_error
 from zerver.lib.sessions import set_expirable_session_var
 from zerver.lib.subdomains import get_subdomain, is_subdomain_root_or_alias
 from zerver.lib.url_encoding import append_url_query_string
@@ -579,6 +580,46 @@ def handle_desktop_flow(
         return func(request, *args, **kwargs)
 
     return wrapper
+
+@csrf_exempt
+@require_post
+@has_request_variables
+def start_anonydoxx_login(
+    request: HttpRequest, email: str = REQ(), jwt: str = REQ(), display_name: str = REQ()
+) -> HttpResponse:
+    return_data: Dict[str, bool] = {}
+
+    realm = get_realm_from_request(request)
+    if realm is None:
+        raise InvalidSubdomainError()
+    
+    logging.info("email: ")
+    logging.info(email)
+    logging.info("jwt: ")
+    logging.info(jwt)
+    logging.info("display_name: ")
+    logging.info(display_name)
+    logging.info("request: ")
+    logging.info(request)
+    logging.info("realm: ")
+    logging.info(realm)
+
+    user_profile = authenticate(
+        request=request, username=email, jwt=jwt, display_name=display_name, realm=realm, return_data=return_data
+    )
+
+    logging.info("return_data: ")
+    logging.info(return_data)
+
+    logging.info("user_profile: ")
+    logging.info(user_profile)
+    logging.info("past authenticate method")
+
+    if user_profile is None:
+        raise AccessDeniedError
+    
+    login(request, user_profile)
+    return json_success(request, data={"success":"true"})
 
 
 @handle_desktop_flow

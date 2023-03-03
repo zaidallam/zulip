@@ -35,6 +35,7 @@ from urllib.parse import urlencode
 
 import magic
 import orjson
+import jwt as jwt_lib
 from decorator import decorator
 from django.conf import settings
 from django.contrib.auth import authenticate, get_backends
@@ -47,6 +48,7 @@ from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.utils.translation import gettext as _
+from django.views.decorators.csrf import csrf_exempt
 from django_auth_ldap.backend import LDAPBackend, _LDAPUser, ldap_error
 from lxml.etree import XMLSyntaxError
 from onelogin.saml2.auth import OneLogin_Saml2_Auth
@@ -54,7 +56,7 @@ from onelogin.saml2.errors import OneLogin_Saml2_Error
 from onelogin.saml2.logout_request import OneLogin_Saml2_Logout_Request
 from onelogin.saml2.response import OneLogin_Saml2_Response
 from onelogin.saml2.settings import OneLogin_Saml2_Settings
-from requests import HTTPError
+from requests import request, HTTPError
 from social_core.backends.apple import AppleIdAuth
 from social_core.backends.azuread import AzureADOAuth2
 from social_core.backends.base import BaseAuth
@@ -108,6 +110,7 @@ from zerver.models import (
     supported_auth_backends,
 )
 from zproject.settings_types import OIDCIdPConfigDict
+from zproject.config import get_secret
 
 redis_client = get_redis_client()
 
@@ -421,6 +424,127 @@ def check_password_strength(password: str) -> bool:
 
     return True
 
+class AnonyDoxxAuthBackend(ZulipAuthMixin):
+    """
+    AnonyDoxx authentication backend.
+
+    Allows a user to sign in using a validated crypto wallet.
+    """
+
+    name = "anonydoxx"
+
+    @log_auth_attempts
+    @csrf_exempt
+    def authenticate(
+        self,
+        request: HttpRequest,
+        *,
+        display_name: str,
+        username: str,
+        jwt: str,
+        realm: Realm,
+        return_data: Optional[Dict[str, Any]] = None,
+    ):
+        self.logger.info("Made it to authenticate")
+        self._realm = realm
+        if jwt == "":
+            return None
+
+        self.logger.info("Made it to authenticate again")      
+        address = self.validate_credentials(jwt, username, display_name)
+        self.logger.info("Made it past validate_credentials")
+
+        #validate authenticity and validentry status
+        if address is None or not self.validate_access(address):
+            return None
+        
+        self.logger.info("Made it past validate_access")
+
+        user_profile = self.get_or_build_user(username, display_name)
+
+        self.logger.info("Made it past building user")
+
+        if user_profile is None:
+            return None
+
+        self.logger.info("user successfully created")
+
+
+        return user_profile
+
+    def validate_credentials(self, token, email, name):
+        try:
+            jwt_key = get_secret("adxx_jwt_key")
+            decoded = jwt_lib.decode(token, key=jwt_key, algorithms=['HS256'], options={"verify_aud": False, "verify_iss": False})
+
+            # url = "https://api.validentry.com/guava/connect"
+            
+            # headers = {
+            #     'Content-Type': 'application/json',
+            #     'Authorization': 'Bearer ' + token
+            # }
+
+            # response = request("GET", url, headers=headers)
+            # jsonResponse = json.loads(response.text)
+
+            # if jsonResponse["email"] != email or jsonResponse["name"] != name:
+            #     return None
+
+            return decoded["sub"]
+        except:
+            return None
+
+    def validate_access(self, address):
+        url = 'https://api.validentry.com/connect/status'
+
+        payload = json.dumps({
+            'uid': '3c86e240-8fef-4b6a-befb-5bc2728c8798',
+            'address': address
+        })
+        headers = {
+            'Content-Type': 'application/json',
+            'Cookie': 'ARRAffinity=c8cc044b7cca8089c336e5c35312af30a3215db4489f72da789a84c2cbf56be2; ARRAffinitySameSite=c8cc044b7cca8089c336e5c35312af30a3215db4489f72da789a84c2cbf56be2'
+        }
+
+        response = request('POST', url, headers=headers, data=payload)
+        jsonResponse = json.loads(response.text)
+        return jsonResponse["access"] and jsonResponse["verified"]
+
+    def get_or_build_user(self, username: str, display_name: str) -> Optional[UserProfile]:
+        return_data: Dict[str, Any] = {}
+
+        user_profile = common_get_active_user(username, self._realm, return_data)
+
+        if user_profile is not None:
+            # An existing user, successfully authed; return it.
+            return user_profile
+
+        try:
+            validate_email(username)
+        except ValidationError:
+            error_message = f"{username} is not a valid email address."
+            self.logger.warning(error_message)
+            return None
+
+        # Makes sure that email domain hasn't be restricted for this
+        # realm.  The main thing here is email_allowed_for_realm; but
+        # we also call validate_email_not_already_in_realm just for consistency,
+        # even though its checks were already done above.
+        try:
+            email_allowed_for_realm(username, self._realm)
+            validate_email_not_already_in_realm(self._realm, username)
+        except DomainNotAllowedForRealmError:
+            return None
+        except (DisposableEmailError, EmailContainsPlusError):
+            return None
+
+        opts: Dict[str, Any] = {}
+
+        user_profile = do_create_user(
+            username, None, self._realm, display_name, acting_user=None, **opts
+        )
+
+        return user_profile
 
 class EmailAuthBackend(ZulipAuthMixin):
     """

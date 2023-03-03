@@ -5,7 +5,6 @@ from django.conf import settings
 from django.conf.urls import include
 from django.conf.urls.i18n import i18n_patterns
 from django.contrib.auth.views import (
-    LoginView,
     PasswordResetCompleteView,
     PasswordResetConfirmView,
     PasswordResetDoneView,
@@ -13,7 +12,8 @@ from django.contrib.auth.views import (
 from django.urls import path, re_path
 from django.urls.resolvers import URLPattern, URLResolver
 from django.utils.module_loading import import_string
-from django.views.generic import RedirectView
+from django.views.generic import RedirectView, TemplateView
+from django.views.decorators.csrf import csrf_exempt
 
 from zerver.forms import LoggingSetPasswordForm
 from zerver.lib.integrations import WEBHOOK_INTEGRATIONS
@@ -29,7 +29,6 @@ from zerver.views.auth import (
     jwt_fetch_api_key,
     log_into_subdomain,
     login_page,
-    logout_then_login,
     password_reset,
     remote_user_jwt,
     remote_user_sso,
@@ -38,6 +37,7 @@ from zerver.views.auth import (
     start_remote_user_sso,
     start_social_login,
     start_social_signup,
+    start_anonydoxx_login,
 )
 from zerver.views.compatibility import check_global_compatibility
 from zerver.views.custom_profile_fields import (
@@ -249,6 +249,7 @@ if settings.TWO_FACTOR_AUTHENTICATION_ENABLED:
 # All of these paths are accessed by either a /json or /api/v1 prefix;
 # e.g. `PATCH /json/realm` or `PATCH /api/v1/realm`.
 v1_api_and_json_patterns = [
+    rest_path("login", POST=(start_anonydoxx_login, {"override_authentication"})),
     # realm-level calls
     rest_path("realm", PATCH=update_realm),
     rest_path("realm/user_settings_defaults", PATCH=update_realm_user_settings_defaults),
@@ -541,9 +542,8 @@ i18n_urls = [
     # used for URL resolution.  The second here is to allow
     # reverse("login") in templates to
     # return `/accounts/login/`.
-    path("accounts/login/", login_page, {"template_name": "zerver/login.html"}, name="login_page"),
-    path("accounts/login/", LoginView.as_view(template_name="zerver/login.html"), name="login"),
-    path("accounts/logout/", logout_then_login),
+    # path("accounts/login/", login_page, {"template_name": "zerver/login.html"}, name="login_page"),
+    # path("accounts/login/", LoginView.as_view(template_name="zerver/login.html"), name="login"),
     path("accounts/webathena_kerberos_login/", webathena_kerberos_login),
     path("accounts/password/reset/", password_reset, name="password_reset"),
     path(

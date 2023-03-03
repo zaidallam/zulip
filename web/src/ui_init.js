@@ -615,14 +615,14 @@ export function initialize_everything() {
     initialize_navbar();
     initialize_message_feed_errors();
 
-    realm_logo.initialize();
+    // realm_logo.initialize();
     message_lists.initialize();
     recent_topics_ui.initialize();
     alert_words.initialize(alert_words_params);
     emojisets.initialize();
     scroll_bar.initialize();
     message_viewport.initialize();
-    navbar_alerts.initialize();
+    // navbar_alerts.initialize();
     compose_closed_ui.initialize();
     initialize_kitchen_sink_stuff();
     echo.initialize();
@@ -664,7 +664,7 @@ export function initialize_everything() {
     search.initialize();
     tutorial.initialize();
     notifications.initialize();
-    gear_menu.initialize();
+    // gear_menu.initialize();
     giphy.initialize();
     presence.initialize(presence_params);
     settings_display.initialize();

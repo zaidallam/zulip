@@ -188,6 +188,10 @@ def create_streams_if_needed(
     whitespace"""
     added_streams: List[Stream] = []
     existing_streams: List[Stream] = []
+
+    if acting_user.role != UserProfile.ROLE_REALM_OWNER and acting_user.role != UserProfile.ROLE_REALM_ADMINISTRATOR:
+        return added_streams, existing_streams
+
     for stream_dict in stream_dicts:
         invite_only = stream_dict.get("invite_only", False)
         stream, created = create_stream_if_needed(

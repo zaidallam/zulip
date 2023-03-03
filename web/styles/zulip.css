@@ -270,7 +270,7 @@ p.n-margin {
     height: $header_height;
     padding-bottom: $header_padding_bottom;
     /* Since the headers are sticky, we need non-transparent background. */
-    background-color: hsl(0, 0%, 100%);
+    /* background-color: hsl(0, 0%, 100%); */
 }
 
 #top_navbar {

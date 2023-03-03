@@ -263,7 +263,8 @@ function create_stream() {
             $("#create_stream_name").val("");
             $("#create_stream_description").val("");
             ui_report.success(
-                $t_html({defaultMessage: "Stream successfully created!"}),
+                // $t_html({defaultMessage: "Stream successfully created!"}),
+                $t_html({defaultMessage: "Only admins can create streams."}),
                 $(".stream_create_info"),
             );
             loading.destroy_indicator($("#stream_creating_indicator"));
@@ -305,6 +306,11 @@ export function new_stream_clicked(stream_name) {
     }
     show_new_stream_modal();
     $("#create_stream_name").trigger("focus");
+
+    ui_report.message(
+        $t_html({defaultMessage: "Only admins can create streams."}),
+        $(".stream_create_info"),
+    );
 }
 
 function clear_error_display() {

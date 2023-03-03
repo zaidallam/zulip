@@ -43,7 +43,7 @@
 
     .modal-bg,
     .modal__container {
-        background-color: hsl(212, 28%, 18%);
+        background-color: #212529;
     }
 
     .modal__close {
@@ -165,7 +165,7 @@
     .private_messages_container,
     .message_header,
     .header {
-        background-color: hsl(212, 28%, 18%);
+        background-color: #212529;
     }
 
     #scroll-to-bottom-button-container {
@@ -296,7 +296,7 @@
     }
 
     .message_embed .data-container::after {
-        background: linear-gradient(0deg, hsl(212, 28%, 18%), transparent 100%);
+        background: linear-gradient(0deg, #212529, transparent 100%);
     }
 
     .column-left .left-sidebar,
@@ -309,7 +309,7 @@
     .dark .message_label_clickable.stream_label,
     .dark .stream_label,
     .stream_label {
-        color: hsl(212, 28%, 18%);
+        color: #212529;
     }
 
     .new-style label.checkbox input[type="checkbox"] ~ span {
@@ -348,7 +348,7 @@
        background colors for these, but this alert feature can't use a
        transparent background without creating other problems */
     .alert-msg {
-        background-color: hsl(212, 28%, 18%);
+        background-color: #212529;
     }
 
     .private-message .alert-msg {
@@ -367,11 +367,11 @@
        on a dark background, and don't change the dark labels dark either. */
     .message_header:not(.dark_background)
         a.stream_label:not(.dark_background):hover {
-        color: hsl(212, 28%, 18%);
+        color: #212529;
     }
 
     .message_header {
-        box-shadow: 0 -1px 0 0 hsl(212, 28%, 18%);
+        box-shadow: 0 -1px 0 0 #212529;
     }
 
     /* these are converting grey things to "new grey" */
@@ -441,7 +441,7 @@
     }
 
     select option {
-        background-color: hsl(212, 28%, 18%);
+        background-color: #212529;
         color: hsl(236, 33%, 90%);
     }
 
@@ -553,7 +553,7 @@
     .recipient_row {
         .message_row.unread {
             .date_row {
-                background-color: hsl(212, 28%, 18%);
+                background-color: #212529;
             }
         }
 
@@ -635,7 +635,7 @@
     .dropdown .dropdown-menu li.divider,
     .popover hr,
     hr {
-        color: hsl(212, 28%, 18%);
+        color: #212529;
         opacity: 0.2;
     }
 
@@ -765,7 +765,7 @@
         #topics_header,
         .narrow-filter > .bottom_left_row,
         #stream_filters .topic-list .filter-topics {
-            background-color: hsl(212, 28%, 18%);
+            background-color: #212529;
         }
     }
 
@@ -816,11 +816,11 @@
     }
 
     .recent_topics_container {
-        background-color: hsl(212, 28%, 18%) !important;
+        background-color: #212529 !important;
     }
 
     #recent_topics_table tr {
-        background-color: hsl(212, 28%, 18%);
+        background-color: #212529;
 
         &:hover {
             background-color: hsl(208, 26%, 11%, 0.6);
@@ -879,7 +879,7 @@
     }
 
     .table-striped tbody tr:nth-child(odd) td {
-        background-color: hsl(212, 28%, 18%);
+        background-color: #212529;
     }
 
     .user-groups-container .right .display-type,
@@ -1272,7 +1272,7 @@
         }
 
         .hotspot-popover.arrow-right::after {
-            border-left-color: hsl(212, 28%, 18%);
+            border-left-color: #212529;
         }
 
         .hotspot-popover.arrow-bottom::before {
@@ -1280,7 +1280,7 @@
         }
 
         .hotspot-popover.arrow-bottom::after {
-            border-top-color: hsl(212, 28%, 18%);
+            border-top-color: #212529;
         }
 
         .hotspot-popover.arrow-left::before {
@@ -1288,7 +1288,7 @@
         }
 
         .hotspot-popover.arrow-left::after {
-            border-right-color: hsl(212, 28%, 18%);
+            border-right-color: #212529;
         }
 
         .hotspot-popover.arrow-top::before {
@@ -1296,14 +1296,14 @@
         }
 
         .hotspot-popover.arrow-top::after {
-            border-bottom-color: hsl(212, 28%, 18%);
+            border-bottom-color: #212529;
         }
     }
 
     /* Content: */
     .hotspot.overlay .hotspot-popover .hotspot-popover-content,
     .hotspot.overlay .hotspot-popover .hotspot-popover-bottom {
-        background-color: hsl(212, 28%, 18%);
+        background-color: #212529;
     }
 
     .alert-zulip-logo,
@@ -1355,7 +1355,7 @@
 
     #bots_lists_navbar .active a {
         color: hsl(0, 0%, 87%);
-        background-color: hsl(212, 28%, 18%);
+        background-color: #212529;
         border-color: hsl(0, 0%, 87%);
         border-bottom-color: transparent;
     }

@@ -29,7 +29,7 @@ from .config import get_secret
 ## support@example.com is totally reasonable, as is admin@example.com.
 ## Do not put a display name; e.g. "support@example.com", not
 ## "Zulip Support <support@example.com>".
-ZULIP_ADMINISTRATOR = "zulip-admin@example.com"
+ZULIP_ADMINISTRATOR = "security@anonydoxx.io"
 
 ## The user-accessible Zulip hostname for this installation, e.g.
 ## zulip.example.com.  This should match what users will put in their
@@ -38,7 +38,7 @@ ZULIP_ADMINISTRATOR = "zulip-admin@example.com"
 ##
 ## If you need to access the server on a specific port, you should set
 ## EXTERNAL_HOST to e.g. zulip.example.com:1234 here.
-EXTERNAL_HOST = "zulip.example.com"
+EXTERNAL_HOST = "zulip.anonydoxx.network"
 
 ## Alternative hostnames.  A comma-separated list of strings
 ## representing the host/domain names that your users can enter in
@@ -142,7 +142,8 @@ EMAIL_GATEWAY_IMAP_FOLDER = "INBOX"
 ## enabled.  If you want to disable it, do so after creating the
 ## initial realm and user.
 AUTHENTICATION_BACKENDS: Tuple[str, ...] = (
-    "zproject.backends.EmailAuthBackend",  # Email and password; just requires SMTP setup
+    "zproject.backends.AnonyDoxxAuthBackend", 
+    # "zproject.backends.EmailAuthBackend",  # Email and password; just requires SMTP setup
     # "zproject.backends.GoogleAuthBackend",  # Google auth, setup below
     # "zproject.backends.GitHubAuthBackend",  # GitHub auth, setup below
     # "zproject.backends.GitLabAuthBackend",  # GitLab auth, setup below

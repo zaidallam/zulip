@@ -50,15 +50,16 @@ ALLOWED_HOSTS = ["*"]
 # Uncomment extra backends if you want to test with them.  Note that
 # for Google and GitHub auth you'll need to do some pre-setup.
 AUTHENTICATION_BACKENDS: Tuple[str, ...] = (
-    "zproject.backends.DevAuthBackend",
-    "zproject.backends.EmailAuthBackend",
-    "zproject.backends.GitHubAuthBackend",
-    "zproject.backends.GoogleAuthBackend",
-    "zproject.backends.SAMLAuthBackend",
+    # "zproject.backends.DevAuthBackend",
+    "zproject.backends.AnonyDoxxAuthBackend",
+    # "zproject.backends.EmailAuthBackend",
+    # "zproject.backends.GitHubAuthBackend",
+    # "zproject.backends.GoogleAuthBackend",
+    # "zproject.backends.SAMLAuthBackend",
     # 'zproject.backends.AzureADAuthBackend',
-    "zproject.backends.GitLabAuthBackend",
-    "zproject.backends.AppleAuthBackend",
-    "zproject.backends.GenericOpenIdConnectBackend",
+    # "zproject.backends.GitLabAuthBackend",
+    # "zproject.backends.AppleAuthBackend",
+    # "zproject.backends.GenericOpenIdConnectBackend",
 )
 
 EXTERNAL_URI_SCHEME = "http://"
