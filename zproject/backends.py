@@ -447,19 +447,19 @@ class AnonyDoxxAuthBackend(ZulipAuthMixin):
     ):
         self.logger.info("Made it to authenticate")
         self._realm = realm
-        if jwt == "":
-            return None
+        # if jwt == "":
+        #     return None
 
-        self.logger.info("Made it to authenticate again")      
-        address = self.validate_credentials(jwt, username, display_name)
-        self.logger.info("Made it past validate_credentials")
+        # self.logger.info("Made it to authenticate again")      
+        # address = self.validate_credentials(jwt, username, display_name)
+        # self.logger.info("Made it past validate_credentials")
 
-        #validate authenticity and validentry status
-        # if address is None or not self.validate_access(address):
-        if address is None:
-            return None
+        # #validate authenticity and validentry status
+        # # if address is None or not self.validate_access(address):
+        # if address is None:
+        #     return None
         
-        self.logger.info("Made it past validate_access")
+        # self.logger.info("Made it past validate_access")
 
         user_profile = self.get_or_build_user(username, display_name)
 
