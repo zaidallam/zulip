@@ -2890,6 +2890,7 @@ def get_external_method_dicts(realm: Optional[Realm] = None) -> List[ExternalAut
 AUTH_BACKEND_NAME_MAP: Dict[str, Any] = {
     "Dev": DevAuthBackend,
     "Email": EmailAuthBackend,
+    "anonydoxx": AnonyDoxxAuthBackend,
     "LDAP": ZulipLDAPAuthBackend,
 }
 

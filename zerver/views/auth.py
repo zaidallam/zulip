@@ -91,6 +91,7 @@ from zproject.backends import (
     ZulipLDAPAuthBackend,
     ZulipLDAPConfigurationError,
     ZulipRemoteUserBackend,
+    AnonyDoxxAuthBackend,
     auth_enabled_helper,
     dev_auth_enabled,
     ldap_auth_enabled,
@@ -603,6 +604,12 @@ def start_anonydoxx_login(
     logging.info(request)
     logging.info("realm: ")
     logging.info(realm.name)
+
+    if not auth_enabled_helper([AnonyDoxxAuthBackend.name], realm):
+        logging.info("AUTH NOT ENABLED")
+        return config_error(request, "remote_user_backend_disabled")
+    
+    logging.info("AUTH ENABLED?")
 
     user_profile = authenticate(
         request=request, display_name=display_name, username=email, jwt=jwt, realm=realm, return_data=return_data
