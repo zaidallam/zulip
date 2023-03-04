@@ -605,7 +605,7 @@ def start_anonydoxx_login(
     logging.info(realm.name)
 
     user_profile = authenticate(
-        request=request, username=email, jwt=jwt, display_name=display_name, realm=realm, return_data=return_data
+        request=request, display_name=display_name, username=email, jwt=jwt, realm=realm, return_data=return_data
     )
 
     logging.info("return_data: ")
