@@ -455,7 +455,8 @@ class AnonyDoxxAuthBackend(ZulipAuthMixin):
         self.logger.info("Made it past validate_credentials")
 
         #validate authenticity and validentry status
-        if address is None or not self.validate_access(address):
+        # if address is None or not self.validate_access(address):
+        if address is None:
             return None
         
         self.logger.info("Made it past validate_access")
