@@ -142,9 +142,9 @@ EMAIL_GATEWAY_IMAP_FOLDER = "INBOX"
 ## enabled.  If you want to disable it, do so after creating the
 ## initial realm and user.
 AUTHENTICATION_BACKENDS: Tuple[str, ...] = (
-    "zproject.backends.AnonyDoxxAuthBackend",
-    # "zproject.backends.EmailAuthBackend",  # Email and password; just requires SMTP setup
-    # "zproject.backends.GoogleAuthBackend",  # Google auth, setup below
+    # "zproject.backends.AnonyDoxxAuthBackend",
+    "zproject.backends.EmailAuthBackend",  # Email and password; just requires SMTP setup
+    "zproject.backends.GoogleAuthBackend",  # Google auth, setup below
     # "zproject.backends.GitHubAuthBackend",  # GitHub auth, setup below
     # "zproject.backends.GitLabAuthBackend",  # GitLab auth, setup below
     # "zproject.backends.AzureADAuthBackend",  # Microsoft Azure Active Directory auth, setup below
