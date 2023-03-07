@@ -1,6 +1,7 @@
 import logging
 import secrets
 import urllib
+
 from functools import wraps
 from typing import TYPE_CHECKING, Any, Callable, Dict, List, Mapping, Optional, Tuple, cast
 from urllib.parse import urlencode
@@ -589,6 +590,7 @@ def start_anonydoxx_login(
     request: HttpRequest, email: str = REQ(), jwt: str = REQ(), display_name: str = REQ()
 ) -> HttpResponse:
     return_data: Dict[str, bool] = {}
+    logging.info(settings.AUTHENTICATION_BACKENDS)
 
     realm = get_realm_from_request(request)
     if realm is None:
