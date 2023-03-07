@@ -143,8 +143,8 @@ EMAIL_GATEWAY_IMAP_FOLDER = "INBOX"
 ## initial realm and user.
 AUTHENTICATION_BACKENDS: Tuple[str, ...] = (
     # "zproject.backends.AnonyDoxxAuthBackend",
-    "zproject.backends.EmailAuthBackend",  # Email and password; just requires SMTP setup
-    "zproject.backends.GoogleAuthBackend",  # Google auth, setup below
+    # "zproject.backends.EmailAuthBackend",  # Email and password; just requires SMTP setup
+    # "zproject.backends.GoogleAuthBackend",  # Google auth, setup below
     # "zproject.backends.GitHubAuthBackend",  # GitHub auth, setup below
     # "zproject.backends.GitLabAuthBackend",  # GitLab auth, setup below
     # "zproject.backends.AzureADAuthBackend",  # Microsoft Azure Active Directory auth, setup below

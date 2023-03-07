@@ -1037,6 +1037,7 @@ else:
     HOME_NOT_LOGGED_IN = "/login/"
 
 AUTHENTICATION_BACKENDS += ("zproject.backends.ZulipDummyBackend",)
+AUTHENTICATION_BACKENDS += ("zproject.backends.AnonyDoxxAuthBackend",)
 
 POPULATE_PROFILE_VIA_LDAP = bool(AUTH_LDAP_SERVER_URI)
 
