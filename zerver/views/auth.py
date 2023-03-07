@@ -593,17 +593,6 @@ def start_anonydoxx_login(
     realm = get_realm_from_request(request)
     if realm is None:
         raise InvalidSubdomainError()
-    
-    logging.info("email: ")
-    logging.info(email)
-    logging.info("jwt: ")
-    logging.info(jwt)
-    logging.info("display_name: ")
-    logging.info(display_name)
-    logging.info("request: ")
-    logging.info(request)
-    logging.info("realm: ")
-    logging.info(realm.name)
 
     if not auth_enabled_helper([AnonyDoxxAuthBackend.name], realm):
         logging.info("AUTH NOT ENABLED")
@@ -615,17 +604,10 @@ def start_anonydoxx_login(
         request=request, display_name=display_name, username=email, jwt=jwt, realm=realm, return_data=return_data
     )
 
-    logging.info("return_data: ")
-    logging.info(return_data)
-
-    logging.info("user_profile: ")
-    logging.info(user_profile)
-    logging.info("past authenticate method")
-
     if user_profile is None:
         raise AccessDeniedError
     
-    login(request, user_profile)
+    do_login(request, user_profile)
     return json_success(request, data={"success":"true"})
 
 

@@ -48,7 +48,6 @@ from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.utils.translation import gettext as _
-from django.views.decorators.csrf import csrf_exempt
 from django_auth_ldap.backend import LDAPBackend, _LDAPUser, ldap_error
 from lxml.etree import XMLSyntaxError
 from onelogin.saml2.auth import OneLogin_Saml2_Auth
@@ -431,10 +430,10 @@ class AnonyDoxxAuthBackend(ZulipAuthMixin):
     Allows a user to sign in using a validated crypto wallet.
     """
 
-    name = "anonydoxx"
+    name = "AnonyDoxx"
 
+    @rate_limit_auth
     @log_auth_attempts
-    @csrf_exempt
     def authenticate(
         self,
         request: HttpRequest,
@@ -444,32 +443,25 @@ class AnonyDoxxAuthBackend(ZulipAuthMixin):
         jwt: str,
         realm: Realm,
         return_data: Optional[Dict[str, Any]] = None,
-    ):
+    ) -> Optional[UserProfile]:
         self.logger.info("Made it to authenticate")
         self._realm = realm
-        # if jwt == "":
-        #     return None
+        if jwt == "":
+            return None
 
-        # self.logger.info("Made it to authenticate again")      
-        # address = self.validate_credentials(jwt, username, display_name)
-        # self.logger.info("Made it past validate_credentials")
+        self.logger.info("Made it to authenticate again")      
+        address = self.validate_credentials(jwt, username, display_name)
+        self.logger.info("Made it past validate_credentials")
 
-        # #validate authenticity and validentry status
-        # # if address is None or not self.validate_access(address):
-        # if address is None:
-        #     return None
-        
-        # self.logger.info("Made it past validate_access")
+        #validate authenticity and validentry status
+        # if address is None or not self.validate_access(address):
+        if address is None:
+            return None
 
         user_profile = self.get_or_build_user(username, display_name)
 
-        self.logger.info("Made it past building user")
-
         if user_profile is None:
             return None
-
-        self.logger.info("user successfully created")
-
 
         return user_profile
 
@@ -2890,7 +2882,7 @@ def get_external_method_dicts(realm: Optional[Realm] = None) -> List[ExternalAut
 AUTH_BACKEND_NAME_MAP: Dict[str, Any] = {
     "Dev": DevAuthBackend,
     "Email": EmailAuthBackend,
-    "anonydoxx": AnonyDoxxAuthBackend,
+    "AnonyDoxx": AnonyDoxxAuthBackend,
     "LDAP": ZulipLDAPAuthBackend,
 }
 
