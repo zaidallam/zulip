@@ -242,6 +242,7 @@ def supported_auth_backends() -> List["ModelBackend"]:
     global supported_backends
     # Caching temporarily disabled for debugging
     supported_backends = django.contrib.auth.get_backends()
+    logging.info(supported_backends)
     assert supported_backends is not None
     return supported_backends
 

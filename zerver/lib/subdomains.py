@@ -24,7 +24,6 @@ def get_subdomain(request: HttpRequest) -> str:
     # compatibility with older versions of Zulip, so that's a start.
 
     host = request.get_host().lower()
-    logging.info(host)
     return get_subdomain_from_hostname(host)
 
 
