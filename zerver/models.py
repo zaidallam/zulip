@@ -242,7 +242,6 @@ def supported_auth_backends() -> List["ModelBackend"]:
     global supported_backends
     # Caching temporarily disabled for debugging
     supported_backends = django.contrib.auth.get_backends()
-    logging.info(supported_backends)
     assert supported_backends is not None
     return supported_backends
 
@@ -792,6 +791,8 @@ class Realm(models.Model):  # type: ignore[django-manager-missing] # django-stub
             backend = AUTH_BACKEND_NAME_MAP[k]
             if backend in supported_backends:
                 ret[k] = v
+        logging.info(ret)
+        logging.info(supported_backends)
         return ret
 
     def __str__(self) -> str:
