@@ -136,12 +136,10 @@ def auth_enabled_helper(backends_to_check: List[str], realm: Optional[Realm]) ->
     else:
         enabled_method_dict = {method: True for method in Realm.AUTHENTICATION_FLAGS}
 
-    logging.info(enabled_method_dict)
     pad_method_dict(enabled_method_dict)
     for supported_backend in supported_auth_backends():
         for backend_name in backends_to_check:
             backend = AUTH_BACKEND_NAME_MAP[backend_name]
-            logging.info(backend)
             if enabled_method_dict[backend_name] and isinstance(supported_backend, backend):
                 return True
     return False

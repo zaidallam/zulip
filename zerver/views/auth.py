@@ -590,17 +590,10 @@ def start_anonydoxx_login(
     request: HttpRequest, email: str = REQ(), jwt: str = REQ(), display_name: str = REQ()
 ) -> HttpResponse:
     return_data: Dict[str, bool] = {}
-    logging.info(settings.AUTHENTICATION_BACKENDS)
 
     realm = get_realm_from_request(request)
     if realm is None:
         raise InvalidSubdomainError()
-
-    if not auth_enabled_helper([AnonyDoxxAuthBackend.auth_backend_name], realm):
-        logging.info("AUTH NOT ENABLED")
-        return config_error(request, "remote_user_backend_disabled")
-    
-    logging.info("AUTH ENABLED?")
 
     user_profile = authenticate(
         request=request, display_name=display_name, username=email, jwt=jwt, realm=realm, return_data=return_data
