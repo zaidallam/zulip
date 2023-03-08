@@ -596,7 +596,7 @@ def start_anonydoxx_login(
     if realm is None:
         raise InvalidSubdomainError()
 
-    if not auth_enabled_helper([AnonyDoxxAuthBackend.name], realm):
+    if not auth_enabled_helper([AnonyDoxxAuthBackend.auth_backend_name], realm):
         logging.info("AUTH NOT ENABLED")
         return config_error(request, "remote_user_backend_disabled")
     

@@ -432,7 +432,8 @@ class AnonyDoxxAuthBackend(ZulipAuthMixin):
     Allows a user to sign in using a validated crypto wallet.
     """
 
-    name = "AnonyDoxx"
+    auth_backend_name = "AnonyDoxx"
+    name = "anonydoxx"
 
     @rate_limit_auth
     @log_auth_attempts

@@ -262,6 +262,7 @@ class Realm(models.Model):  # type: ignore[django-manager-missing] # django-stub
     AUTHENTICATION_FLAGS = [
         "Google",
         "Email",
+        "AnonyDoxx",
         "GitHub",
         "LDAP",
         "Dev",
