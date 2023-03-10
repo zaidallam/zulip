@@ -127,6 +127,7 @@ from zerver.views.registration import (
     get_prereg_key_and_redirect,
     new_realm_send_confirm,
     realm_redirect,
+    realm_register,
     signup_send_confirm,
 )
 from zerver.views.report import (
@@ -235,7 +236,7 @@ if settings.TWO_FACTOR_AUTHENTICATION_ENABLED:
 #
 #   - The nginx config knows which URLs to route to Django or Tornado.
 #
-#   - Likewise for the local dev server in tools/run-dev.py.
+#   - Likewise for the local dev server in tools/run-dev.
 
 # These endpoints constitute the currently designed API (V1), which uses:
 # * REST verbs
@@ -579,6 +580,7 @@ i18n_urls = [
         name="new_realm_send_confirm",
     ),
     path("accounts/register/", accounts_register, name="accounts_register"),
+    path("realm/register/", realm_register, name="realm_register"),
     path(
         "accounts/do_confirm/<confirmation_key>",
         get_prereg_key_and_redirect,

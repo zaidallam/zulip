@@ -141,7 +141,7 @@ class UploadSerializeMixin(SerializeMixin):
 
 class ZulipTestCase(TestCase):
     # Ensure that the test system just shows us diffs
-    maxDiff: Optional[int] = None  # noqa: N815
+    maxDiff: Optional[int] = None
 
     def setUp(self) -> None:
         super().setUp()
@@ -187,7 +187,7 @@ use `git grep assertLogs` to see dozens of correct examples.
 
 You should be able to quickly reproduce this failure with:
 
-test-backend --ban-console-output {self.id()}
+./tools/test-backend --ban-console-output {self.id()}
 
 Output:
 {extra_output_finder.full_extra_output.decode(errors="replace")}
@@ -1088,7 +1088,10 @@ Output:
         self.assertEqual(result, data)
 
     def assert_json_success(
-        self, result: Union["TestHttpResponse", HttpResponse]
+        self,
+        result: Union["TestHttpResponse", HttpResponse],
+        *,
+        ignored_parameters: Optional[List[str]] = None,
     ) -> Dict[str, Any]:
         """
         Successful POSTs return a 200 and JSON of the form {"result": "success",
@@ -1104,6 +1107,14 @@ Output:
         # empty value.
         self.assertIn("msg", json)
         self.assertNotEqual(json["msg"], "Error parsing JSON in response!")
+        # Check ignored parameters.
+        if ignored_parameters is None:
+            self.assertNotIn("ignored_parameters_unsupported", json)
+        else:
+            self.assertIn("ignored_parameters_unsupported", json)
+            self.assert_length(json["ignored_parameters_unsupported"], len(ignored_parameters))
+            for param in ignored_parameters:
+                self.assertTrue(param in json["ignored_parameters_unsupported"])
         return json
 
     def get_json_error(self, result: "TestHttpResponse", status_code: int = 400) -> str:

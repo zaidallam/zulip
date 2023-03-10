@@ -356,14 +356,14 @@ class AddNewUserHistoryTest(ZulipTestCase):
 
         with patch("zerver.models.get_display_recipient", return_value="recip"):
             self.assertEqual(
-                str(message),
+                repr(message),
                 "<Message: recip /  / "
-                "<UserProfile: {} {}>>".format(user_profile.email, user_profile.realm),
+                "<UserProfile: {} {!r}>>".format(user_profile.email, user_profile.realm),
             )
 
             user_message = most_recent_usermessage(user_profile)
             self.assertEqual(
-                str(user_message),
+                repr(user_message),
                 f"<UserMessage: recip / {user_profile.email} ([])>",
             )
 
@@ -3625,7 +3625,7 @@ class RealmCreationTest(ZulipTestCase):
             "key": find_key_by_email(email),
             "from_confirmation": "1",
         }
-        result = self.client_post("/accounts/register/", payload)
+        result = self.client_post("/realm/register/", payload)
         # Assert that the form did not prompt the user for enabling
         # marketing emails.
         self.assert_not_in_success_response(['input id="id_enable_marketing_emails"'], result)

@@ -7,8 +7,7 @@ from unittest.mock import patch
 import orjson
 from django.conf import settings
 from django.core.exceptions import ValidationError
-from django.db.models import Q
-from django.db.models.query import QuerySet
+from django.db.models import Q, QuerySet
 from django.utils.timezone import now as timezone_now
 
 from analytics.models import UserCount
@@ -30,7 +29,7 @@ from zerver.actions.realm_settings import (
 )
 from zerver.actions.user_activity import do_update_user_activity, do_update_user_activity_interval
 from zerver.actions.user_status import do_update_user_status
-from zerver.actions.user_topics import do_mute_topic
+from zerver.actions.user_topics import do_set_user_topic_visibility_policy
 from zerver.actions.users import do_deactivate_user
 from zerver.lib import upload
 from zerver.lib.avatar_hash import user_avatar_path
@@ -49,7 +48,6 @@ from zerver.lib.test_helpers import (
     use_s3_backend,
 )
 from zerver.lib.upload import claim_attachment, upload_avatar_image, upload_message_attachment
-from zerver.lib.user_topics import add_topic_mute
 from zerver.lib.utils import assert_is_not_none
 from zerver.models import (
     AlertWord,
@@ -774,13 +772,11 @@ class RealmImportExportTest(ExportFile):
 
         # data to test import of muted topic
         stream = get_stream("Verona", original_realm)
-        recipient = stream.recipient
-        assert recipient is not None
-        add_topic_mute(
-            user_profile=sample_user,
-            stream_id=stream.id,
-            recipient_id=recipient.id,
-            topic_name="Verona2",
+        do_set_user_topic_visibility_policy(
+            sample_user,
+            stream,
+            "Verona2",
+            visibility_policy=UserTopic.MUTED,
         )
 
         # data to test import of muted users
@@ -880,7 +876,7 @@ class RealmImportExportTest(ExportFile):
             imported_realm_result = f(imported_realm)
             # orig_realm_result should be truthy and have some values, otherwise
             # the test is kind of meaningless
-            assert orig_realm_result  # type: ignore[truthy-bool] # see above
+            assert orig_realm_result
 
             # It may be helpful to do print(f.__name__) if you are having
             # trouble debugging this.
@@ -1768,8 +1764,12 @@ class SingleUserExportTest(ExportFile):
             rec = records[-1]
             self.assertEqual(rec["status_text"], "on vacation")
 
-        do_mute_topic(cordelia, scotland, "bagpipe music")
-        do_mute_topic(othello, scotland, "nessie")
+        do_set_user_topic_visibility_policy(
+            cordelia, scotland, "bagpipe music", visibility_policy=UserTopic.MUTED
+        )
+        do_set_user_topic_visibility_policy(
+            othello, scotland, "nessie", visibility_policy=UserTopic.MUTED
+        )
 
         @checker
         def zerver_usertopic(records: List[Record]) -> None:

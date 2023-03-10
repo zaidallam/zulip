@@ -33,7 +33,8 @@ Contents:
 - {ref}`Code testing <code-testing>`
 - {ref}`Subsystem documentation <subsystem-documentation>`
 - {ref}`Writing documentation <writing-documentation>`
-- {ref}`Translating <translating>`
+- {ref}`Translating Zulip <translating>`
+- {ref}`Outreach programs <outreach>`
 
 (overview)=
 
@@ -42,6 +43,7 @@ Contents:
 maxdepth: 3
 ---
 
+Zulip homepage <https://zulip.com/>
 overview/index
 ```
 

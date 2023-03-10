@@ -552,7 +552,7 @@ class RecipientTest(ZulipTestCase):
             type_id=stream.id,
             type=Recipient.STREAM,
         )
-        self.assertEqual(str(recipient), f"<Recipient: Verona ({stream.id}, {Recipient.STREAM})>")
+        self.assertEqual(repr(recipient), f"<Recipient: Verona ({stream.id}, {Recipient.STREAM})>")
 
 
 class StreamAdminTest(ZulipTestCase):
@@ -3494,7 +3494,7 @@ class SubscriptionPropertiesTest(ZulipTestCase):
 
         subs = gather_subscriptions(test_user)[0]
         sub = subs[0]
-        json_result = self.api_post(
+        result = self.api_post(
             test_user,
             "/api/v1/users/me/subscriptions/properties",
             {
@@ -3513,10 +3513,7 @@ class SubscriptionPropertiesTest(ZulipTestCase):
             },
         )
 
-        self.assert_json_success(json_result)
-        result = orjson.loads(json_result.content)
-        self.assertIn("ignored_parameters_unsupported", result)
-        self.assertEqual(result["ignored_parameters_unsupported"], ["invalid_parameter"])
+        self.assert_json_success(result, ignored_parameters=["invalid_parameter"])
 
 
 class SubscriptionRestApiTest(ZulipTestCase):
@@ -5114,11 +5111,11 @@ class SubscriptionAPITest(ZulipTestCase):
         )
         subscription = self.get_subscription(user_profile, invite_streams[0])
 
-        with mock.patch("zerver.models.Recipient.__str__", return_value="recip"):
+        with mock.patch("zerver.models.Recipient.__repr__", return_value="recip"):
             self.assertEqual(
-                str(subscription),
+                repr(subscription),
                 "<Subscription: "
-                f"<UserProfile: {user_profile.email} {user_profile.realm}> -> recip>",
+                f"<UserProfile: {user_profile.email} {user_profile.realm!r}> -> recip>",
             )
 
         self.assertIsNone(subscription.desktop_notifications)

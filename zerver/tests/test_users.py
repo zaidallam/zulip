@@ -18,6 +18,7 @@ from zerver.actions.message_send import RecipientInfoResult, get_recipient_info
 from zerver.actions.muted_users import do_mute_user
 from zerver.actions.realm_settings import do_set_realm_property
 from zerver.actions.user_settings import bulk_regenerate_api_keys, do_change_user_setting
+from zerver.actions.user_topics import do_set_user_topic_visibility_policy
 from zerver.actions.users import (
     change_user_is_active,
     do_change_can_create_users,
@@ -46,7 +47,6 @@ from zerver.lib.test_helpers import (
 )
 from zerver.lib.upload import upload_avatar_image
 from zerver.lib.user_groups import get_system_user_group_for_user
-from zerver.lib.user_topics import add_topic_mute
 from zerver.lib.users import Accounts, access_user_by_id, get_accounts_for_email, user_ids_to_users
 from zerver.lib.utils import assert_is_not_none
 from zerver.models import (
@@ -63,6 +63,7 @@ from zerver.models import (
     UserGroupMembership,
     UserHotspot,
     UserProfile,
+    UserTopic,
     check_valid_user_ids,
     filter_to_valid_prereg_users,
     get_client,
@@ -921,7 +922,7 @@ class AdminCreateUserTest(ZulipTestCase):
                 short_name="DEPRECATED",
             ),
         )
-        self.assert_json_success(result)
+        self.assert_json_success(result, ignored_parameters=["short_name"])
 
         result = self.client_post(
             "/json/users",
@@ -1840,12 +1841,39 @@ class RecipientInfoTest(ZulipTestCase):
         )
         self.assertEqual(info.stream_push_user_ids, {hamlet.id})
 
+        # Now have Hamlet mute the stream and unmute the topic,
+        # which shouldn't omit him from stream_push_user_ids.
+        sub.is_muted = True
+        sub.save()
+
+        do_set_user_topic_visibility_policy(
+            hamlet,
+            stream,
+            topic_name,
+            visibility_policy=UserTopic.UNMUTED,
+        )
+
+        info = get_recipient_info(
+            realm_id=realm.id,
+            recipient=recipient,
+            sender_id=hamlet.id,
+            stream_topic=stream_topic,
+        )
+        self.assertEqual(info.stream_push_user_ids, {hamlet.id})
+
+        # Now unmute the stream and remove topic visibility_policy.
+        sub.is_muted = False
+        sub.save()
+        do_set_user_topic_visibility_policy(
+            hamlet, stream, topic_name, visibility_policy=UserTopic.VISIBILITY_POLICY_INHERIT
+        )
+
         # Now have Hamlet mute the topic to omit him from stream_push_user_ids.
-        add_topic_mute(
-            user_profile=hamlet,
-            stream_id=stream.id,
-            recipient_id=recipient.id,
-            topic_name=topic_name,
+        do_set_user_topic_visibility_policy(
+            hamlet,
+            stream,
+            topic_name,
+            visibility_policy=UserTopic.MUTED,
         )
 
         info = get_recipient_info(
