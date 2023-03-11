@@ -38,7 +38,7 @@ from .configured_settings import (
     EXTERNAL_HOST_WITHOUT_PORT,
     EXTERNAL_URI_SCHEME,
     EXTRA_INSTALLED_APPS,
-    EXTRA_MIDDLEWARE,
+    # EXTRA_MIDDLEWARE,
     GOOGLE_OAUTH2_CLIENT_ID,
     IS_DEV_DROPLET,
     LOCAL_UPLOADS_DIR,
@@ -184,7 +184,8 @@ MIDDLEWARE = (
     "two_factor.middleware.threadlocals.ThreadLocals",  # Required by Twilio
     # Needs to be after CommonMiddleware, which sets Content-Length
     "zerver.middleware.FinalizeOpenGraphDescription",
-) + EXTRA_MIDDLEWARE
+# ) + EXTRA_MIDDLEWARE
+)
 
 AUTH_USER_MODEL = "zerver.UserProfile"
 
