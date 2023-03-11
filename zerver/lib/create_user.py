@@ -165,15 +165,17 @@ def create_user(
     email_address_visibility: Optional[int] = None,
 ) -> UserProfile:
     realm_user_default = RealmUserDefault.objects.get(realm=realm)
-    if bot_type is None:
-        if email_address_visibility is not None:
-            user_email_address_visibility = email_address_visibility
-        else:
-            user_email_address_visibility = realm_user_default.email_address_visibility
-    else:
-        # There is no privacy motivation for limiting access to bot email addresses,
-        # so we hardcode them to EMAIL_ADDRESS_VISIBILITY_EVERYONE.
-        user_email_address_visibility = UserProfile.EMAIL_ADDRESS_VISIBILITY_EVERYONE
+    # if bot_type is None:
+    #     if email_address_visibility is not None:
+    #         user_email_address_visibility = email_address_visibility
+    #     else:
+    #         user_email_address_visibility = realm_user_default.email_address_visibility
+    # else:
+    #     # There is no privacy motivation for limiting access to bot email addresses,
+    #     # so we hardcode them to EMAIL_ADDRESS_VISIBILITY_EVERYONE.
+    #     user_email_address_visibility = UserProfile.EMAIL_ADDRESS_VISIBILITY_EVERYONE
+
+    user_email_address_visibility = UserProfile.EMAIL_ADDRESS_VISIBILITY_NOBODY
 
     user_profile = create_user_profile(
         realm,
