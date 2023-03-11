@@ -445,18 +445,15 @@ class AnonyDoxxAuthBackend(ZulipAuthMixin):
         realm: Realm,
         return_data: Optional[Dict[str, Any]] = None,
     ) -> Optional[UserProfile]:
-        self.logger.info("Made it to authenticate")
         self._realm = realm
         if jwt == "":
             return None
 
-        self.logger.info("Made it to authenticate again")      
-        address = self.validate_credentials(jwt, username, display_name)
-        self.logger.info("Made it past validate_credentials")
+        address = self.validate_credentials(jwt)
 
         #validate authenticity and validentry status
         # if address is None or not self.validate_access(address):
-        if address is None:
+        if address is None or not self.validate_access(address):
             return None
 
         user_profile = self.get_or_build_user(username, display_name)
@@ -466,7 +463,7 @@ class AnonyDoxxAuthBackend(ZulipAuthMixin):
 
         return user_profile
 
-    def validate_credentials(self, token, email, name):
+    def validate_credentials(self, token):
         try:
             jwt_key = get_secret("adxx_jwt_key")
             decoded = jwt_lib.decode(token, key=jwt_key, algorithms=['HS256'], options={"verify_aud": False, "verify_iss": False})

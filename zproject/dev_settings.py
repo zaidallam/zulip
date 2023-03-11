@@ -69,7 +69,8 @@ ERROR_BOT = "error-bot@zulip.com"
 EMAIL_GATEWAY_BOT = "emailgateway@zulip.com"
 PHYSICAL_ADDRESS = "Zulip Headquarters, 123 Octo Stream, South Pacific Ocean"
 STAFF_SUBDOMAIN = "zulip"
-EXTRA_INSTALLED_APPS = ["zilencer", "analytics", "corporate"]
+EXTRA_INSTALLED_APPS = ["zilencer", "analytics", "corporate", "corsheaders"]
+EXTRA_MIDDLEWARE = ("corsheaders.middleware.CorsMiddleware",)
 # Disable Camo in development
 CAMO_URI = ""
 
@@ -192,3 +193,13 @@ SCIM_CONFIG: Dict[str, SCIMConfigDict] = {
         "name_formatted_included": True,
     }
 }
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000"
+]
+
+CORS_ALLOW_CREDENTIALS = True
+
+CORS_ALLOW_HEADERS = [
+    "Access-Control-Allow-Credentials"
+]

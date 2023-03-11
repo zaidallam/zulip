@@ -72,3 +72,6 @@ natsort
 
 # For spell check linter
 codespell
+
+# For ADXX dashboard to be able to communicate in dev
+django-cors-headers

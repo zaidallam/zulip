@@ -524,6 +524,7 @@ django[argon2]==4.1.7 \
     #   -r requirements/common.in
     #   django-auth-ldap
     #   django-bitfield
+    #   django-cors-headers
     #   django-formtools
     #   django-otp
     #   django-phonenumber-field
@@ -541,6 +542,10 @@ django-bitfield==2.2.0 \
 django-bmemcached==0.3.0 \
     --hash=sha256:4e4b7d97216dbae331c1de10e699ca22804b94ec3a90d2762dd5d146e6986a8a
     # via -r requirements/common.in
+django-cors-headers==3.14.0 \
+    --hash=sha256:5fbd58a6fb4119d975754b2bc090f35ec160a8373f276612c675b00e8a138739 \
+    --hash=sha256:684180013cc7277bdd8702b80a3c5a4b3fcae4abb2bf134dceb9f5dfe300228e
+    # via -r requirements/dev.in
 django-cte==1.2.1 \
     --hash=sha256:2486f953151300874a3eaf325020980de77e67aa1029322240869bf7fc2d4c44 \
     --hash=sha256:74ebf05b1d8eed1d2d06c07c413bf96d4bd962206fca97ce705bd878834bb74e
